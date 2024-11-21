@@ -21,6 +21,18 @@ const HomePage = () => {
     }
   };
 
+  const handleDelete = async (productId) => {
+    if (!window.confirm("Are you sure you want to delete this product?")) {
+      return; // Prevent deletion if user cancels
+    }
+    try {
+      await axiosInstance.delete(`/products/${productId}`); // Send DELETE request
+      setProducts(products.filter((product) => product._id !== productId)); // Update state
+    } catch (error) {
+      console.error("Error deleting product:", error);
+    }
+  };
+
   if (loading) return <h2>Loading products...</h2>;
 
   return (
@@ -36,6 +48,12 @@ const HomePage = () => {
             />
             <h3 className="product-name">{product.name}</h3>
             <p className="product-price">${product.price}</p>
+            <button
+              className="delete-button"
+              onClick={() => handleDelete(product._id)}
+            >
+              Delete
+            </button>
           </div>
         ))}
       </div>
